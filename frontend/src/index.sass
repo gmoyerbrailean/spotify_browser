@@ -1,0 +1,66 @@
+//////////////////////
+// Global variables //
+//////////////////////
+$break-small: 600px           // responsive / mobile breakpoint
+$break-med: 1200px            // responsive / tablet breakpoint
+$footer-height: 2em
+$side-margins: 175px         
+
+/////////////////////
+// Page components //
+///////////////////// 
+#page
+  padding: 15px
+  margin-bottom: $footer-height
+  
+  // large screens
+  @media screen and (min-width: $break-small)
+    margin-left: $side-margins
+    margin-right: $side-margins
+
+  // tablet screens
+  @media screen and (max-width: $break-med)
+    margin-left: ($side-margins / 2) - 0.5
+    margin-right: ($side-margins / 2) - 0.5
+
+  // mobile screens
+  @media screen and (max-width: $break-small)
+    text-align: justify
+
+///////////////
+// Dashboard //
+///////////////
+
+#music-dashboard
+  @media screen and (min-width: $break-small)
+    padding: 25px
+
+#recent-listens-controls
+  color: #BBBBBB
+
+#recent-listens-toggle
+  float: right
+
+.recent-listens-table-rows-option
+  margin: 0 5px
+
+.pseudoLink:hover
+  text-decoration: underline
+  cursor: pointer
+
+////////////
+// Footer //
+////////////
+
+#footer
+  position: fixed
+  left: 0
+  bottom: 0
+  width: 100%
+  background-color: #EEEEEE
+  text-align: center
+  height: $footer-height
+  padding-top: ($footer-height / 8)
+
+#footer .copyright
+  color: darkgrey

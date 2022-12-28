@@ -1,0 +1,76 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+####################
+## Global ignores ##
+####################
+
+.DS_Store
+
+# VS Code
+.vscode/
+
+# virtual environment
+venv
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# environment setups
+setup.sh
+setup_*.sh
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+###################################
+## backend / flask app gitignore ##
+###################################
+
+# Byte-compiled / optimized / DLL files
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+
+# C extensions
+*.so
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# IPython
+profile_default/
+ipython_config.py
+
+# misc backend stuff
+backend/start.sh
+backend/*.sql
+
+
+####################################
+## frontend / react app gitignore ##
+####################################
+
+# dependencies
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+
+# testing
+frontend/coverage
+
+# production
+frontend/build
+
+# misc
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# webfonts
+frontend/public/webfonts/*
