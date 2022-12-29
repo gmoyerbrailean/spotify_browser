@@ -5,14 +5,19 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Dashboard from "./routes/Dashboard";
 import Page from "./compoments/Page";
+import Dashboard from "./routes/Dashboard";
+import Artist from './routes/Artist';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Page><Dashboard /></Page>,
+    element: <Page><Dashboard /></Page>
   },
+  {
+    path: "/artist",
+    element: <Page><Artist /></Page>
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

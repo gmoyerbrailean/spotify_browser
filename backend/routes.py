@@ -161,12 +161,50 @@ def get_artists():
     'totalCount': len(res)
   })
 
+## First listen of a given artist
+@app.route('/api/artists/<string:aid>/first')
+def get_artist_first(aid):
 
-## Get summary data for a given artist
-@app.route('/api/artists/<string:aid>/summary')
-def get_artist_summary():
+  connection = Connection()
+  base_qry = '''
+    select time_stamp, t.name
+    from plays as p
+      inner join tracks as t on p.tid = t.id
+        inner join tracks__artists as ta on t.id = ta.tid
+        inner join artists as a on ta.aid = a.id
+    where a.id = '%s'
+      and time_stamp is not null
+    order by time_stamp asc
+    limit 1;
+  ''' % aid
+  res = connection.exec_qry(base_qry)
+  return({
+    'date': res[0][0].strftime("%b %d %Y, %H:%M:%S"),
+    'track': res[0][1],
+  })
 
-  return()
+## Latest listen of a given artist
+@app.route('/api/artists/<string:aid>/latest')
+def get_artist_latest(aid):
+
+  connection = Connection()
+  base_qry = '''
+    select time_stamp, t.name
+    from plays as p
+      inner join tracks as t on p.tid = t.id
+        inner join tracks__artists as ta on t.id = ta.tid
+        inner join artists as a on ta.aid = a.id
+    where a.id = '%s'
+      and time_stamp is not null
+    order by time_stamp desc
+    limit 1;
+  ''' % aid
+  res = connection.exec_qry(base_qry)
+  return({
+    'date': res[0][0].strftime("%b %d %Y, %H:%M:%S"),
+    'track': res[0][1],
+  })
+
 
 ## Get your personal ranking for a given artist
 @app.route('/api/artists/<string:aid>/rank')
@@ -195,6 +233,30 @@ def get_artist_rank(aid):
   return({ 'rank': res[0][0] })
 
 
+### get the tracks for a given artist
+@app.route('/api/artists/<string:aid>/tracks')
+def get_artist_tracks(aid):
+
+  connection = Connection()
+
+  base_qry = '''
+    select t.name,count(t.id) 
+    from plays as p
+      inner join tracks as t on p.tid = t.id
+      inner join tracks__artists as ta on p.tid = ta.tid
+    where ta.aid = '{}'
+    group by t.name
+    order by count(t.id) desc;
+  '''.format(aid)
+
+  res = connection.exec_qry(base_qry)
+  
+  return({
+    'items': [ {'track': x[0], 'count': x[1] } for x in res],
+    'totalCount': len(res),
+    'totalPlays': sum([x[1] for x in res])
+  })
+
 ### get artists followers over time
 @app.route('/api/artists/<string:aid>/stats')
 def get_artist_followers(aid):
@@ -216,31 +278,6 @@ def get_artist_followers(aid):
     'followers': [int(x[1]) for x in res],
     'date': [x[2] for x in res]
   })
-
-## get tracks associated with an artist
-@app.route('/api/artists/<string:aid>/tracks')
-def get_artist_tracks(aid):
-
-  connection = Connection()
-
-  qry = '''
-  select t.name, count(t.name)
-  from plays p
-    inner join tracks t on t.id = p.tid
-    inner join tracks__artists ta on t.id = ta.tid
-    inner join artists a on a.id = ta.aid
-  where a.id = "{0}"
-  group by t.name
-  order by count(t.name) desc
-  '''.format(aid)
-  
-  res = connection.exec_qry(qry)
-
-  return({
-    'items': [ {'name': x[0], 'count': x[1] } for x in res],
-    'totalCount': len(res)
-  })
-
 
 ## get genres associated with an artist
 # @app.route('/api/artists/<string:aid>/genres')
@@ -272,6 +309,7 @@ def get_artist_count():
   return({
     'total': res[0][0]
   })
+
 
 
 #############
@@ -306,7 +344,7 @@ def get_search():
   search_type = request.args.get('type')
   search_qry = request.args.get('query')
 
-  qry = 'select id, name from ' + search_type + ' where name like "%' + search_qry + '%" limit 100'
+  qry = 'select id, name from {0} where name like "%{1}%" order by name asc limit 100'.format(search_type, search_qry)
   res = connection.exec_qry(qry)
 
   return ({

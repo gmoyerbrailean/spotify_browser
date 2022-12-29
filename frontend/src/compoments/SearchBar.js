@@ -7,7 +7,6 @@ class SearchBar extends React.Component {
         super(props);
 
         this.state = {
-            type: props.type,
             query: '',
             loading: false,
             search_results: [],
@@ -22,7 +21,7 @@ class SearchBar extends React.Component {
         })
 
         if( data.value.length > 2 ) {
-            let searchApi = fetch('http://127.0.0.1:5000/api/search?type=' + this.state.type + '&query=' + data.value);
+            let searchApi = fetch('http://127.0.0.1:5000/api/search?type=' + this.props.type + '&query=' + data.value);
 
             Promise.resolve(searchApi)
             .then(value => value.json())
@@ -37,11 +36,13 @@ class SearchBar extends React.Component {
 
     handleSearchSelection = (e, data) => {
         // use the callback fxn to pass the selection out of the component
-        this.props.onArtistSelect(data.result.id);
+        this.setState({
+            search_value: data.result.title
+        })
+        this.props.onSearchSelect(data.result.id, data.result.title);
     }
 
     render() {
-        // stuff
         const loading = this.state.loading;
         const search_results = this.state.search_results;
         const search_value = this.state.search_value;

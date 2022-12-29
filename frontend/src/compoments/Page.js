@@ -8,7 +8,7 @@ class Page extends React.Component {
       <div id="page">
         {this.props.children}
         <div id="footer">
-          <p class="copyright">&#169; 2022 Gregory Moyerbrailean</p>
+          <p className="copyright">&#169; 2022 Gregory Moyerbrailean</p>
         </div>
       </div>
     )
