@@ -287,3 +287,29 @@ def get_track_count():
   return({
     'total': res[0][0]
   })
+
+
+#############
+## /search ##
+#############
+
+## API to power search components
+## Two query parameters:
+##  - type (artist, track, etc)
+##  - query (string to search against)
+@app.route('/api/search')
+def get_search():
+
+  connection = Connection()
+
+  ## TODO - throw error if params not provided
+  search_type = request.args.get('type')
+  search_qry = request.args.get('query')
+
+  qry = 'select id, name from ' + search_type + ' where name like "%' + search_qry + '%" limit 100'
+  res = connection.exec_qry(qry)
+
+  return ({
+    'items': [ {'id': x[0], 'name': x[1]} for x in res],
+    'totalCount': len(res)
+  })
