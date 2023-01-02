@@ -15,6 +15,14 @@ def get_plays():
 
   connection = Connection()
 
+  ## apply filters & limits, if given
+  artistFilter = ''
+  artistId = request.args.get('artistId')
+  if artistId:
+    artistFilter = "and a.id = '{}'".format(artistId)
+
+  limit = 'limit ' + request.args.get('limit') if request.args.get('limit') else ''
+
   base_qry = '''
   select p.time_stamp, t.name, d.name, p.context, p.context_uri, group_concat(a.name separator ',')
   from plays as p 
@@ -23,13 +31,11 @@ def get_plays():
     inner join tracks__artists as ta on t.id=ta.tid
     inner join artists as a on a.id=ta.aid
   where time_stamp is not null
+  {}
   group by p.time_stamp, t.name 
   order by time_stamp desc
-  '''
-
-  limit = request.args.get('limit')
-  if limit:
-    base_qry += 'limit ' + limit
+  {}
+  '''.format(artistFilter, limit)
 
   res = connection.exec_qry(base_qry)
   items = [{

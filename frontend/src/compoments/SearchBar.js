@@ -17,18 +17,19 @@ class SearchBar extends React.Component {
     handleSearchChange = (e, data) => {
 
         this.setState({
-            search_value: data.value
+            search_value: data.value,
+            search_results: [] // clear the results so we don't see that odd stutter
         })
 
         if( data.value.length > 2 ) {
             let searchApi = fetch('http://127.0.0.1:5000/api/search?type=' + this.props.type + '&query=' + data.value);
 
             Promise.resolve(searchApi)
-            .then(value => value.json())
-            .then(value => value.items.map(v => {return {title: v.name, id: v.id}}))
-            .then(value => {
+            .then(result => result.json())
+            .then(result => result.items.map(v => {return {title: v.name, id: v.id}}))
+            .then(result => {
                 this.setState({
-                    search_results: value
+                    search_results: result
                 })
             })
         }
