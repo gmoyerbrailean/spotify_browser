@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Page from "./compoments/Page";
+import Page from "./components/Page";
 import Dashboard from "./routes/Dashboard";
 import Artist from './routes/Artist';
 

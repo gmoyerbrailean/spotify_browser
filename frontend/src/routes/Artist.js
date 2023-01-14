@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid, Table } from "semantic-ui-react";
-import DateHistogram from "../compoments/charts/DateHistogram";
+import DateHistogram from "../components/charts/DateHistogram";
 
-import SearchBar from "../compoments/SearchBar";
+import SearchBar from "../components/SearchBar";
 
 class Artist extends React.Component{
 
